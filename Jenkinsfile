@@ -2,62 +2,54 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.8.6' // Ensure this version is configured in Jenkins
-        jdk 'JDK 17'      // Ensure this JDK version is configured in Jenkins
+        maven 'Maven-3.9.9' // ✅ Must match the name in Jenkins
+        jdk 'JDK-21'        // ✅ Must match the name in Jenkins
     }
     
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from SCM
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                // Build the project using Maven
-                sh 'mvn clean install'
+                bat 'mvn clean install'
             }
         }
 
         stage('Test') {
             steps {
-                // Run unit tests
-                sh 'mvn test'
+                bat 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                // Package the application
-                sh 'mvn package'
+                bat 'mvn package'
             }
         }
 
         stage('Deploy') {
             steps {
-                // Simple deployment example
-                sh 'echo "Deploying application..."'
-                // Example of copying artifacts to a deploy location
-                sh 'cp target/basic-java-app-1.0-SNAPSHOT.jar /path/to/deploy/'
+                bat 'echo Deploying application...'
+                // ❗ Comment out the below line unless /path/to/deploy/ exists on Windows
+                // bat 'copy target\\basic-java-app-1.0-SNAPSHOT.jar C:\\deploy\\'
             }
         }
     }
 
     post {
         always {
-            // Clean up actions
-            sh 'echo "Cleaning up..."'
+            bat 'echo Cleaning up...'
         }
 
         success {
-            // Actions on successful build
             echo 'Build succeeded!'
         }
 
         failure {
-            // Actions on failed build
             echo 'Build failed!'
         }
     }
